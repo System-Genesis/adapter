@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  adapter:
+    build: .
+    environment:
+      KARTOFFEL_URL: http://kartoffel.branch-yesodot.org/api/
+      DOMAINS: leonardo.com,city.com,jello.com
+      BULK_LIMIT: 500
+      PAGE_SIZE: 1000
+      PORT: 80
+    ports:
+      - 80:80
