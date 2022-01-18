@@ -22,6 +22,10 @@ export type GetPersonsParams = {
     updatedFrom?: Date;
 };
 
+export type searchDigitalIdentitiesParams = {
+    uniqueId: string;
+};
+
 export type GetAllGroupsParams = {
     updateFrom?: Date;
     akaUnit?: string;

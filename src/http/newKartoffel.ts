@@ -4,8 +4,8 @@ import { URLSearchParams } from 'url';
 import * as https from 'https';
 // import * as getTokenCreator from 'spike-get-token';
 import config from '../config/index';
-import { EntityDTO, GroupDTO } from '../interfaces/newKartoffel';
-import { GetAllGroupsParams, GetPersonsParams, SearchGroupsParams, SearchPersonsParams } from '../interfaces/types';
+import { DigitalIdentityDTO, EntityDTO, GroupDTO } from '../interfaces/newKartoffel';
+import { GetAllGroupsParams, GetPersonsParams, searchDigitalIdentitiesParams, SearchGroupsParams, SearchPersonsParams } from '../interfaces/types';
 
 /* const getToken = getTokenCreator({
     redisHost: config.redis.url,
@@ -92,6 +92,15 @@ export default class NewKartoffel {
             .data;
     }
 
+    public static async searchDigitalIdentities(params: searchDigitalIdentitiesParams, token: string): Promise<DigitalIdentityDTO[]> {
+        return (
+            await NewKartoffel.kartoffelAxios.get(
+                `/digitalIdentities/search?expanded=true`,
+                NewKartoffel.insertPropToOption<searchDigitalIdentitiesParams>(token, params),
+            )
+        ).data;
+    }
+
     public static async getPersonByIDomainUser(domainUser: string, token: string): Promise<EntityDTO> {
         if (domainUser.indexOf('@') !== -1) {
             return (
@@ -99,23 +108,19 @@ export default class NewKartoffel {
             ).data;
         }
 
-        const { domainsSuffix } = config;
-        try {
+        const diSearchResult: DigitalIdentityDTO[] = await NewKartoffel.searchDigitalIdentities({ uniqueId: domainUser }, token);
+        if (diSearchResult.length > 0 && diSearchResult[0].uniqueId.split('@')[0] === domainUser) {
             return (
-                await Promise.any(
-                    domainsSuffix.map(
-                        (ds) =>
-                            NewKartoffel.kartoffelAxios.get(
-                                `/entities/digitalIdentity/${domainUser}@${ds}?expanded=true`,
-                                NewKartoffel.insertPropToOption(token),
-                            ) as Promise<AxiosResponse<EntityDTO>>,
-                    ),
+                await NewKartoffel.kartoffelAxios.get(
+                    `/entities/digitalIdentity/${diSearchResult[0].uniqueId}?expanded=true`,
+                    NewKartoffel.insertPropToOption(token),
                 )
             ).data;
-        } catch (error: unknown) {
-            // eslint-disable-next-line no-console
-            throw error instanceof AggregateError ? error.errors[0] : error;
         }
+
+        return (
+            await NewKartoffel.kartoffelAxios.get(`/entities/digitalIdentity/${domainUser}?expanded=true`, NewKartoffel.insertPropToOption(token))
+        ).data;
     }
 
     public static async searchPersons(params: SearchPersonsParams, token: string): Promise<EntityDTO[]> {

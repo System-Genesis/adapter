@@ -10,7 +10,6 @@ const config = {
         numOfBulk: env.get('BULK_LIMIT').required().asInt(),
         pageSize: env.get('PAGE_SIZE').required().asInt(),
     },
-    domainsSuffix: env.get('DOMAINS').required().asArray(),
     spike: {
         clientId: env.get('SPIKE_CLIENT').asString(),
         clientSecret: env.get('SPIKE_SECRET').asString(),
