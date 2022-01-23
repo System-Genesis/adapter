@@ -109,7 +109,7 @@ export default class NewKartoffel {
         }
 
         const diSearchResult: DigitalIdentityDTO[] = await NewKartoffel.searchDigitalIdentities({ uniqueId: domainUser }, token);
-        if (diSearchResult.length > 0 && diSearchResult[0].uniqueId.split('@')[0] === domainUser) {
+        if (diSearchResult.length > 0 && diSearchResult[0].uniqueId.split('@')[0].toLowerCase() === domainUser.toLowerCase()) {
             return (
                 await NewKartoffel.kartoffelAxios.get(
                     `/entities/digitalIdentity/${diSearchResult[0].uniqueId}?expanded=true`,
