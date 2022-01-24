@@ -7,6 +7,8 @@ import { once } from 'events';
 import { errorMiddleware } from './error';
 import appRouter from './router';
 import { objectMap } from '../utils/functionHandler';
+import { authMiddleware } from './auth';
+import config from '../config';
 
 class Server {
     private app: express.Application;
@@ -39,6 +41,7 @@ class Server {
             res.locals.token = req.headers.authorization || '';
             next();
         });
+        if (config.authRequired) app.use(authMiddleware);
         app.use(appRouter);
         app.use(errorMiddleware);
 

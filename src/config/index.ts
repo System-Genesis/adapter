@@ -1,5 +1,6 @@
 import * as env from 'env-var';
 import './dotenv';
+import { getSpikePublickey } from './auth';
 
 const config = {
     service: {
@@ -11,6 +12,8 @@ const config = {
         pageSize: env.get('PAGE_SIZE').required().asInt(),
     },
     spike: {
+        publicKey: getSpikePublickey(),
+        clientNames: env.get('SPIKE_CLIENT_NAME').asArray(','),
         clientId: env.get('SPIKE_CLIENT').asString(),
         clientSecret: env.get('SPIKE_SECRET').asString(),
         spikeURL: env.get('SPIKE_URL').asString(),
@@ -18,6 +21,7 @@ const config = {
         tokenRedisKeyName: env.get('SPIKE_REDIS_KEY').asString(),
         spikePublicKeyFullPath: env.get('SPIKE_PUBLIC_KEY_PATH').asString(),
     },
+    authRequired: env.get('AUTH_REQIRED').asBool() || false,
 };
 
 export default config;
