@@ -102,14 +102,9 @@ export default class NewKartoffel {
     }
 
     public static async getPersonByIDomainUser(domainUser: string, token: string): Promise<EntityDTO> {
-        if (domainUser.indexOf('@') !== -1) {
-            return (
-                await NewKartoffel.kartoffelAxios.get(`/entities/digitalIdentity/${domainUser}?expanded=true`, NewKartoffel.insertPropToOption(token))
-            ).data;
-        }
-
-        const diSearchResult: DigitalIdentityDTO[] = await NewKartoffel.searchDigitalIdentities({ uniqueId: domainUser }, token);
-        if (diSearchResult.length > 0 && diSearchResult[0].uniqueId.split('@')[0].toLowerCase() === domainUser.toLowerCase()) {
+        const domainUserToSearch = domainUser.split('@')[0].toLowerCase();
+        const diSearchResult: DigitalIdentityDTO[] = await NewKartoffel.searchDigitalIdentities({ uniqueId: domainUserToSearch }, token);
+        if (diSearchResult.length > 0 && diSearchResult[0].uniqueId.split('@')[0].toLowerCase() === domainUserToSearch) {
             return (
                 await NewKartoffel.kartoffelAxios.get(
                     `/entities/digitalIdentity/${diSearchResult[0].uniqueId}?expanded=true`,
