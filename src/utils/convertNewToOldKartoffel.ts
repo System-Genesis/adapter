@@ -49,8 +49,10 @@ export const convertEntityToPerson = (entity: EntityDTO): IPerson => {
         sex,
         birthDate,
         akaUnit: currentUnit,
+        fullName,
     } = entity;
     const oldPerson: IPerson = {
+        _id: id,
         id,
         identityCard,
         personalNumber,
@@ -73,6 +75,7 @@ export const convertEntityToPerson = (entity: EntityDTO): IPerson => {
         sex,
         birthDate,
         currentUnit,
+        fullName,
     };
     oldPerson.status = 'active';
     oldPerson.hierarchy = entity.hierarchy?.split('/');

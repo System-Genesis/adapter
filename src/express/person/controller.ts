@@ -26,10 +26,9 @@ export default class PersonController {
         const searchParams: SearchPersonsParams = removeEmptyValues({
             fullName: req.query.fullName,
             entityType: req.query.entityType,
-            rank: req.query.entityType,
+            rank: req.query.rank,
             underGroupId: req.query.underGroupId,
             'digitalIdentity.source': req.query['domainUsers.dataSource'],
-            status: req.query.status,
         });
         const persons: EntityDTO[] = await NewKartoffel.searchPersons(searchParams, res.locals.token);
         res.json(persons.map((person) => convertEntityToPerson(person)));

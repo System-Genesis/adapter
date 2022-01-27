@@ -37,6 +37,7 @@ export type ProfilePictureDTO = {
 export interface IPerson {
     // Person's Basic information
     id?: string;
+    _id: string;
     identityCard: string;
     personalNumber?: string;
     domainUsers?: Partial<IDomainUser>[];
@@ -68,4 +69,5 @@ export interface IPerson {
     };
     sex?: string;
     birthDate?: Date;
+    fullName?: string;
 }

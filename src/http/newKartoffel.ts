@@ -135,6 +135,8 @@ export default class NewKartoffel {
     }
 
     public static async getPersons(params: GetPersonsParams, token: string): Promise<EntityDTO[]> {
+        // eslint-disable-next-line no-param-reassign
+        if (params['digitalIdentity.source'] === 'aman') params['digitalIdentity.source'] = 'Aman';
         return NewKartoffel.paginationHandler<EntityDTO>(`/entities?expanded=true`, NewKartoffel.insertPropToOption<GetPersonsParams>(token, params));
     }
 

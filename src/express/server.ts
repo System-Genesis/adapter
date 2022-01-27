@@ -35,7 +35,14 @@ class Server {
                 );
             next();
         });
-
+        app.use((req: Request<unknown, unknown, unknown, object>, _, next) => {
+            if (req.query && req.query instanceof Object)
+                req.query = new Proxy(req.query, {
+                    get: (target: Object, name: string) =>
+                        target[Object.keys(target).find((key) => key.toLowerCase() === name.toLowerCase()) as string],
+                });
+            next();
+        });
         app.use(logger('dev'));
         app.use((req, res, next) => {
             res.locals.token = req.headers.authorization || '';

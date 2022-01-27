@@ -12,9 +12,13 @@ export const checkAuthentication = (token): boolean => {
     }
 };
 
+export const decodeJwt = (token): JwtPayload | string | null => {
+    return jwt.decode(token);
+};
+
 export const checkAuthorization = (token): boolean => {
     try {
-        const decodeToken = jwt.decode(token);
+        const decodeToken = decodeJwt(token);
         return !!clientNames?.includes((decodeToken as JwtPayload).clientName);
     } catch (error) {
         return false;
