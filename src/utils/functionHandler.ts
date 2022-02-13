@@ -1,3 +1,4 @@
+// TODO: maybe need to add v!=undefined too?
 export const removeEmptyValues = (obj: any): any => {
     return Object.fromEntries(
         Object.entries(obj).filter(([_, v]) => v != null),

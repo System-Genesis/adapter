@@ -11,6 +11,7 @@ export default class PersonController {
         res.json(convertEntityToPerson(person));
     }
 
+    // TODO: GetPersonsParams keys are supposed to be arrays because you have middleware that splits?
     static async getAll(req: Request<updatedFrom, unknown, unknown, GetPersonsParams>, res: Response) {
         const personParams: GetPersonsParams = removeEmptyValues({
             entityType: req.query.entityType,
@@ -19,6 +20,7 @@ export default class PersonController {
             'digitalIdentity.source': req.query['domainUsers.dataSource'],
         });
         const persons: EntityDTO[] = await NewKartoffel.getPersons(personParams, res.locals.token);
+        // TODO: Generic Response handler.
         res.json(persons.map((person) => convertEntityToPerson(person)));
     }
 

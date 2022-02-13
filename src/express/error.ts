@@ -32,6 +32,7 @@ export class ForbiddenError extends Error {
     }
 }
 
+// TODO: you have middleware.ts and also error.ts and then function called errorMiddleware, not sure what to do instead but let`s think.
 export const errorMiddleware = (error: Error | AxiosError, _req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (error.name === 'ValidationError') {
         res.status(400).send({
@@ -45,6 +46,7 @@ export const errorMiddleware = (error: Error | AxiosError, _req: express.Request
             code: error.code,
             message: error.message,
         });
+        // TODO: cool
     } else if (axios.isAxiosError(error)) {
         const code = error.response?.data.status || error.response?.status || 500;
         res.status(code).send({
