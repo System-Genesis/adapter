@@ -6,16 +6,12 @@ import { isArrayOfString, removeEmptyValues } from './functionHandler';
 export const convertGroupToOrganizationGroup = (group: GroupDTO): IOrganizationGroup => {
     const { id, name, ancestors, akaUnit, isLeaf: isALeaf, createdAt, updatedAt, children, directEntities } = group;
     const oldGroup: IOrganizationGroup = { id, name, akaUnit, isALeaf, createdAt, updatedAt };
-    // TODO: is recursive okey?, also, Array<any>? wtf man.
-    oldGroup.children = isArrayOfString(children as Array<any>)
-        ? (children as string[])
-        : children?.map((child) => convertGroupToOrganizationGroup(child));
-    oldGroup.ancestors = isArrayOfString(ancestors as Array<any>)
+    oldGroup.children = isArrayOfString(children) ? (children as string[]) : children?.map((child) => convertGroupToOrganizationGroup(child));
+    oldGroup.ancestors = isArrayOfString(ancestors)
         ? (ancestors as string[])
         : ancestors?.map((ancestor) => convertGroupToOrganizationGroup(ancestor));
     if (directEntities) oldGroup.directMembers = directEntities.map((entity) => convertEntityToPerson(entity));
     oldGroup.hierarchy = group.hierarchy.split('/');
-    // TODO: you can use this function in the ResponseHandler class.
     return removeEmptyValues(oldGroup);
 };
 export const convertDigitalIdentityToDomainUser = (digitalIdentityExpanded: DigitalIdentityDTO): IDomainUser => {
@@ -25,58 +21,33 @@ export const convertDigitalIdentityToDomainUser = (digitalIdentityExpanded: Digi
 
     return <IDomainUser>{ uniqueID, adfsUID, mail, dataSource, hierarchy };
 };
-// TODO: can we do it generic mapper function? instead of creating 2 variables, pretty sure it`s possible
+
 export const convertEntityToPerson = (entity: EntityDTO): IPerson => {
-    const {
-        id,
-        identityCard,
-        personalNumber,
-        firstName,
-        lastName,
-        serviceType,
-        entityType,
-        dischargeDay,
-        directGroup,
-        rank,
-        updatedAt,
-        createdAt,
-        jobTitle: job,
-        mail,
-        phone,
-        mobilePhone,
-        address,
-        clearance,
-        pictures,
-        sex,
-        birthDate,
-        akaUnit: currentUnit,
-        fullName,
-    } = entity;
     const oldPerson: IPerson = {
-        _id: id,
-        id,
-        identityCard,
-        personalNumber,
-        firstName,
-        lastName,
-        serviceType,
-        entityType,
-        dischargeDay,
-        directGroup,
-        rank,
-        updatedAt,
-        createdAt,
-        job,
-        mail,
-        phone,
-        mobilePhone,
-        address,
-        clearance,
-        pictures,
-        sex,
-        birthDate,
-        currentUnit,
-        fullName,
+        _id: entity.id,
+        id: entity.id,
+        identityCard: entity.identityCard,
+        personalNumber: entity.personalNumber,
+        firstName: entity.firstName,
+        lastName: entity.lastName,
+        serviceType: entity.serviceType,
+        entityType: entity.entityType,
+        dischargeDay: entity.dischargeDay,
+        directGroup: entity.directGroup,
+        rank: entity.rank,
+        updatedAt: entity.updatedAt,
+        createdAt: entity.createdAt,
+        job: entity.jobTitle,
+        mail: entity.mail,
+        phone: entity.phone,
+        mobilePhone: entity.mobilePhone,
+        address: entity.address,
+        clearance: entity.clearance,
+        pictures: entity.pictures,
+        sex: entity.sex,
+        birthDate: entity.birthDate,
+        currentUnit: entity.akaUnit,
+        fullName: entity.fullName,
     };
     oldPerson.status = 'active';
     oldPerson.hierarchy = entity.hierarchy?.split('/');

@@ -22,27 +22,23 @@ export default class GroupController {
         if (populate.includes('ancestors')) {
             group.ancestors = (
                 await Promise.allSettled(group.ancestors.map((ancestor) => NewKartoffel.getGroupById(ancestor, false, res.locals.token)))
-            )
-                // TODO: maybe use Promise.allSettled().then(DO PUSH STUFF) ? and then no need to use fullfilled
-                .reduce((acc: GroupDTO[], ancestor): GroupDTO[] => {
-                    if (ancestor.status === 'fulfilled') {
-                        acc.push(ancestor.value);
-                    }
-                    return acc;
-                }, []);
+            ).reduce((acc: GroupDTO[], ancestor): GroupDTO[] => {
+                if (ancestor.status === 'fulfilled') {
+                    acc.push(ancestor.value);
+                }
+                return acc;
+            }, []);
         }
 
         res.json(convertGroupToOrganizationGroup(group));
     }
 
     static async getAll(req: Request<akaUnit & updatedFrom, unknown, unknown, unknown>, res: Response) {
-        // TODO: maybe generic remove empty values? lets think together
         const groupParams: GetAllGroupsParams = removeEmptyValues({
             updatedFrom: req.params.from,
             akaUnit: req.params.akaUnit,
         });
         const groups: GroupDTO[] = await NewKartoffel.getGroups(groupParams, res.locals.token);
-        // TODO: maybe add response handler, reusing code.
         res.json(groups.map((group) => convertGroupToOrganizationGroup(group)));
     }
 

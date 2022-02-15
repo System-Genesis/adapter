@@ -18,7 +18,7 @@ export type SearchPersonsParams = {
 export type GetPersonsParams = {
     entityType?: string;
     ['digitalIdentity.source']?: string;
-    rank?: string;
+    rank?: string | string[];
     updatedFrom?: Date;
 };
 

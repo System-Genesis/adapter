@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 import { once } from 'events';
-import { errorMiddleware } from './error';
+import { errorHandler } from './error';
 import appRouter from './router';
 import { authMiddleware, queryInsensitive, stringToArray } from './middleware';
 import config from '../config';
@@ -35,7 +35,7 @@ class Server {
         });
         if (config.authRequired) app.use(authMiddleware);
         app.use(appRouter);
-        app.use(errorMiddleware);
+        app.use(errorHandler);
 
         return app;
     }
