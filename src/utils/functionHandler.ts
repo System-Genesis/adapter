@@ -1,11 +1,8 @@
 export const removeEmptyValues = (obj: any): any => {
-    return Object.fromEntries(
-        Object.entries(obj).filter(([_, v]) => v != null),
-        //  .map(([k, v]) => [k, v === Object(v) ? removeEmptyValues(v) : v]),
-    );
+    return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null));
 };
 
-export const isArrayOfString = (arr: Array<any>): boolean => {
+export const isArrayOfString = (arr: Array<any> | undefined): boolean => {
     return Array.isArray(arr) && arr.every((element) => typeof element === 'string');
 };
 

@@ -32,33 +32,23 @@ export class ForbiddenError extends Error {
     }
 }
 
-export const errorMiddleware = (error: Error | AxiosError, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const errorHandler = (
+    error: (Error & { code: number }) | (AxiosError & { code: number }),
+    _req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+) => {
+    const type: string = error.name;
+    let code = error.code || 500;
+    let { message } = error;
+
     if (error.name === 'ValidationError') {
-        res.status(400).send({
-            type: error.name,
-            code: 400,
-            message: error.message,
-        });
-    } else if (error instanceof ServiceError || error instanceof UnauthorizedError || error instanceof ForbiddenError) {
-        res.status(error.code).send({
-            type: error.name,
-            code: error.code,
-            message: error.message,
-        });
+        code = 400;
     } else if (axios.isAxiosError(error)) {
-        const code = error.response?.data.status || error.response?.status || 500;
-        res.status(code).send({
-            type: error.name,
-            code,
-            message: error.response?.data.message || error.response?.statusText || error.message,
-        });
-    } else {
-        res.status(500).send({
-            type: error.name,
-            code: 500,
-            message: error.message,
-        });
+        code = error.response?.data.status || error.response?.status || 500;
+        message = error.response?.data.message || error.response?.statusText || error.message;
     }
 
+    res.status(code).send({ type, code, message });
     next();
 };
