@@ -9,15 +9,15 @@ export const convertGroupToOrganizationGroup = (group: GroupDTO): IOrganizationG
     oldGroup.children = isArrayOfString(children) ? (children as string[]) : children?.map((child) => convertGroupToOrganizationGroup(child));
     oldGroup.ancestors = isArrayOfString(ancestors)
         ? (ancestors as string[])
-        : ancestors?.map((ancestor) => convertGroupToOrganizationGroup(ancestor));
+        : ancestors.map((ancestor) => convertGroupToOrganizationGroup(ancestor));
     if (directEntities) oldGroup.directMembers = directEntities.map((entity) => convertEntityToPerson(entity));
     oldGroup.hierarchy = group.hierarchy.split('/');
     return removeEmptyValues(oldGroup);
 };
 export const convertDigitalIdentityToDomainUser = (digitalIdentityExpanded: DigitalIdentityDTO): IDomainUser => {
     const { uniqueId: uniqueID, mail, role, source: dataSource } = digitalIdentityExpanded;
-    const adfsUID = role?.roleId;
-    const hierarchy = role?.hierarchy;
+    const adfsUID = role.roleId;
+    const { hierarchy } = role;
 
     return <IDomainUser>{ uniqueID, adfsUID, mail, dataSource, hierarchy };
 };
@@ -33,7 +33,7 @@ export const convertEntityToPerson = (entity: EntityDTO): IPerson => {
         serviceType: entity.serviceType,
         entityType: entity.entityType,
         dischargeDay: entity.dischargeDay,
-        directGroup: entity.directGroup,
+        directGroup: entity.directGroup!,
         rank: entity.rank,
         updatedAt: entity.updatedAt,
         createdAt: entity.createdAt,
@@ -50,8 +50,8 @@ export const convertEntityToPerson = (entity: EntityDTO): IPerson => {
         fullName: entity.fullName,
     };
     oldPerson.status = 'active';
-    oldPerson.hierarchy = entity.hierarchy?.split('/');
-    oldPerson.domainUsers = entity.digitalIdentities?.map((digitalIdentity) => convertDigitalIdentityToDomainUser(digitalIdentity)) || [];
+    oldPerson.hierarchy = entity.hierarchy!.split('/');
+    oldPerson.domainUsers = entity.digitalIdentities.map((digitalIdentity) => convertDigitalIdentityToDomainUser(digitalIdentity));
 
     return removeEmptyValues(oldPerson);
 };

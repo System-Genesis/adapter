@@ -38,13 +38,13 @@ export interface IPerson {
     // Person's Basic information
     id?: string;
     _id: string;
-    identityCard: string;
+    identityCard?: string;
     personalNumber?: string;
     domainUsers?: Partial<IDomainUser>[];
     entityType: string;
     serviceType?: string;
     firstName: string;
-    lastName: string;
+    lastName?: string;
     currentUnit?: string;
     status?: string;
     dischargeDay?: Date;
@@ -55,7 +55,7 @@ export interface IPerson {
     updatedAt?: Date;
     createdAt?: Date;
     // Editable by the Person
-    job: string;
+    job?: string;
     mail?: string;
     phone?: string[];
     mobilePhone?: string[];

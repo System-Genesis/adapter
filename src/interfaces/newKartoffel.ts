@@ -4,12 +4,13 @@ export interface RoleDTO {
     jobTitle: string;
     digitalIdentityUniqueId: string;
     directGroup: string;
-    clearance: string;
+    clearance?: string;
     hierarchy: string;
     hierarchyIds: string[];
     createdAt: Date;
     updatedAt: Date;
     source: string;
+    displayName: string;
 }
 
 export interface DigitalIdentityDTO {
@@ -30,42 +31,44 @@ export interface GroupDTO {
     id: string;
     name: string;
     source: string;
+    diPrefix?: string;
     ancestors: string[] | GroupDTO[];
     hierarchy: string;
-    akaUnit: string;
+    akaUnit?: string;
+    directGroup: string | null;
     status: string;
     isLeaf: boolean;
     createdAt: Date;
     updatedAt: Date;
     // eslint-disable-next-line no-use-before-define
-    directEntities: EntityDTO[];
-    directRoles: RoleDTO[];
+    directEntities?: EntityDTO[];
+    directRoles?: RoleDTO[];
     children?: string[] | GroupDTO[];
 }
 
 export interface EntityDTO {
     // Entity as it should be returned to client
     id: string;
-    displayName: string;
-    hierarchy: string;
-    directGroup: string;
+    displayName?: string;
+    hierarchy?: string;
+    directGroup?: string;
     entityType: string; // enum
-    identityCard: string;
-    personalNumber: string;
+    identityCard?: string;
+    personalNumber?: string;
     goalUserId?: string;
-    serviceType: string;
+    serviceType?: string;
     firstName: string;
-    lastName: string;
+    lastName?: string;
     fullName: string;
-    akaUnit: string;
-    dischargeDay: Date;
-    rank: string; // enum
-    mail: string;
-    jobTitle: string;
+    akaUnit?: string;
+    dischargeDay?: Date;
+    rank?: string; // enum
+    mail?: string;
+    jobTitle?: string;
     phone: string[];
     mobilePhone: string[];
-    address: string;
-    clearance: string; // string of number - enum
+    address?: string;
+    clearance?: string; // string of number - enum
     sex?: string;
     birthDate?: Date;
     createdAt?: Date;
