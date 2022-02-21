@@ -21,7 +21,7 @@ const config = {
         tokenRedisKeyName: env.get('SPIKE_REDIS_KEY').asString(),
         spikePublicKeyFullPath: env.get('SPIKE_PUBLIC_KEY_PATH').asString(),
     },
-    authRequired: env.get('AUTH_REQIRED').asBool() || false,
+    authRequired: env.get('AUTH_REQUIRED').asBool() || false,
 };
 
 export default config;
